@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import express from 'express';
-import { Client } from '@googlemaps/google-maps-services-js';
+import { Client, PlaceInputType } from '@googlemaps/google-maps-services-js';
 
 const PORT = process.env.PORT || 3001;
 
@@ -17,26 +17,35 @@ app.get(`/api/:postcode&:distance`, async (req, res, next) => {
       address: req.params.postcode,
     }
   };
-  const placesArgs = {
+  let placesArgs = {
     params: {
       key: process.env.API_KEY,
-      location: "",
       radius: req.params.distance,
+      types: 'movie_theater'
+    }
+  };
+  let placesArgs2 = {
+    params: {
+      key: process.env.API_KEY,
+      input: 'cinema',
+      inputtype: 'textquery',
+      fields: 'name'
     }
   };
   const client = new Client();
   try {
-  client.geocode(geocodeArgs).then(gcResponse => {
+    const gcResponse = await client.geocode(geocodeArgs);
     const location = gcResponse.data.results[0]['geometry']['location'];
-    placesArgs.params.location = `${location.lat}%2C${location.lng}`
-  });
-  // client.placesNearby(placesArgs).then(pnResponse => {
-  //   const cinemas = pnResponse.data.results[0];
-  //   res.status(200).send(cinemas);
-  // })
- } catch (err) {
-  res.status(400).send(err);
- }
+    placesArgs.params.location = [location['lat'], location['lng']];
+    placesArgs2.params.locationbias = `circle%3A${req.params.distance}%40${location['lat']}%2C${location['lng']}`
+    // const pnResponse = await client.placesNearby(placesArgs);
+    // const movieTheatres = pnResponse.data.results;
+    const pn2Response = await client.findPlaceFromText(placesArgs2);
+    const cinemas = pn2Response.data.candidates;
+    res.status(200).send(cinemas);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
 app.listen(PORT, () => {
