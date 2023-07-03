@@ -3,14 +3,21 @@ import React, {useState} from "react";
 function CinemaLocator() {
   const [postcode, setPostcode] = useState("");
   const [distance, setDistance] = useState(0);
+  const [cinemaData, setCinemaData] = useState(null);
 
-  // async const getCinemasNearPostcode = (e) => {
-  //   e.preventDefault();
-  //   const data = await fetch(`/api/postcode=${postcode}&distance=${distance}`)
-  // }
+const getCinemasNearPostcode = async (e) => {
+    e.preventDefault();
+    let cinemas = await fetch(`/api/${postcode}&${distance}`)
+                  .then(r=> r.json())
+    setCinemaData(cinemas)
+    console.log(cinemaData)
+    setPostcode("")
+    setDistance(0)
+  }
 
     return (
-        <form>
+      <div>
+      <form onSubmit={getCinemasNearPostcode}>
         <label>
           Postcode
           <input type="text" value={postcode} onChange={(e) => setPostcode(e.target.value)} name="postcode" />
@@ -19,8 +26,17 @@ function CinemaLocator() {
           Distance
           <input type="text" value={distance} onChange={(e) => setDistance(e.target.value)} name="distance" />
         </label>
-        <input type="submit" value="Submit" onSubmit={getCinemasNearPostcode}/>
+        <input type="submit" value="Submit"/>
       </form>
+      {cinemaData ? cinemaData.map(cinema => {
+        return (
+        <div>
+          <p>{cinema['name']}</p>
+          <p>{cinema.vicinity}</p>
+        </div>
+        )}) : 'Loading'
+      }
+      </div>
     );
 }
 
