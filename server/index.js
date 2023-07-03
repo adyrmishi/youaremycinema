@@ -25,20 +25,11 @@ app.get(`/api/:postcode&:distance`, async (req, res, next) => {
       types: 'movie_theater'
     }
   };
-  // let placesArgs2 = {
-  //   params: {
-  //     key: process.env.API_KEY,
-  //     input: 'cinema',
-  //     inputtype: 'textquery',
-  //     fields: 'name'
-  //   }
-  // };
-  const client = new Client();
+  client = new Client();
   try {
     const gcResponse = await client.geocode(geocodeArgs);
     const location = gcResponse.data.results[0]['geometry']['location'];
     placesArgs.params.location = [location['lat'], location['lng']];
-    //placesArgs2.params.locationbias = `circle%3A${req.params.distance}%40${location['lat']}%2C${location['lng']}`
     const pnResponse = await client.placesNearby(placesArgs);
     const movieTheatres = pnResponse.data.results;
     res.status(200).send(movieTheatres);
