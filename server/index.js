@@ -25,7 +25,7 @@ app.get(`/api/:postcode&:distance`, async (req, res, next) => {
       types: 'movie_theater'
     }
   };
-  client = new Client();
+  let client = new Client();
   try {
     const gcResponse = await client.geocode(geocodeArgs);
     const location = gcResponse.data.results[0]['geometry']['location'];

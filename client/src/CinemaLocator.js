@@ -50,19 +50,21 @@ const getCinemasNearPostcode = async (e) => {
         <input type="submit" value="Search"/>
       </form>
       </div>
-      {cinemaData ? cinemaData.map(cinema => {
+      {/* {cinemaData ? cinemaData.map(cinema => {
         return (
         <div>
           <p>{cinema['name']}</p>
           <p>{cinema.vicinity}</p>
         </div>
         )}) : 'Loading'
-      }
-        {/* {cinemaData ? cinemaData.map(cinema => {
+      } */}
+      <div class='cinema-results'>
+        {cinemaData ? cinemaData.map(cinema => {
         return (
         <CinemaInfoCard cinemaInfo={cinema} />
         )}) : 'Loading'
-      } */}
+      }
+      </div>
       </div>
     );
 }

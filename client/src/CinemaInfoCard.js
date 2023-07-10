@@ -4,10 +4,9 @@ import CinemaLocator from "./CinemaLocator";
 function CinemaInfoCard(cinemaInfo) {
 
     return (
-        <div>
-        {console.log(cinemaInfo)}
-          <p>{cinemaInfo['name']}</p>
-          <p>{cinemaInfo.vicinity}</p>
+        <div class='cinema-info-card'>
+          <p>{cinemaInfo.cinemaInfo['name']}</p>
+          <p>{cinemaInfo.cinemaInfo.vicinity}</p>
         </div>
     );
 }
