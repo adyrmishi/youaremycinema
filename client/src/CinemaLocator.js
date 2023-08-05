@@ -6,7 +6,7 @@ function CinemaLocator() {
   const [film, setFilm] = useState("");
   const [date, setDate] = useState("");
   const [distance, setDistance] = useState(0);
-  const [cinemaData, setCinemaData] = useState(null);
+  const [cinemaData, setCinemaData] = useState([]);
 
 const getCinemasNearPostcode = async (e) => {
     e.preventDefault();
@@ -50,14 +50,6 @@ const getCinemasNearPostcode = async (e) => {
         <input type="submit" value="Search"/>
       </form>
       </div>
-      {/* {cinemaData ? cinemaData.map(cinema => {
-        return (
-        <div>
-          <p>{cinema['name']}</p>
-          <p>{cinema.vicinity}</p>
-        </div>
-        )}) : 'Loading'
-      } */}
       <div class='cinema-results'>
         {cinemaData ? cinemaData.map(cinema => {
         return (

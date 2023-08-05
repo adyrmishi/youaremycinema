@@ -7,6 +7,7 @@ function CinemaInfoCard(cinemaInfo) {
         <div class='cinema-info-card'>
           <p>{cinemaInfo.cinemaInfo['name']}</p>
           <p>{cinemaInfo.cinemaInfo.vicinity}</p>
+          <p>{cinemaInfo.cinemaInfo.movieTheatreWebsite}</p>
         </div>
     );
 }

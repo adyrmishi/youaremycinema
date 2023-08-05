@@ -13,13 +13,13 @@ app.get("/api", (req, res) => {
 app.get(`/api/:postcode&:distance`, async (req, res, next) => {
   const geocodeArgs = {
     params: {
-      key: process.env.API_KEY,
+      key: process.env.REACT_APP_API_KEY,
       address: req.params.postcode,
     }
   };
   let placesArgs = {
     params: {
-      key: process.env.API_KEY,
+      key: process.env.REACT_APP_API_KEY,
       radius: req.params.distance,
       keyword: 'cinema',
       types: 'movie_theater'
@@ -32,7 +32,23 @@ app.get(`/api/:postcode&:distance`, async (req, res, next) => {
     placesArgs.params.location = [location['lat'], location['lng']];
     const pnResponse = await client.placesNearby(placesArgs);
     const movieTheatres = pnResponse.data.results;
-    res.status(200).send(movieTheatres);
+    const moviesWithUrls = await Promise.all(
+      movieTheatres.map(async movieTheatre => {
+        const request = {
+          params: {
+            key: process.env.REACT_APP_API_KEY,
+            place_id: movieTheatre.place_id,
+            fields: 'website'
+          }
+        }
+        const pdResponse = await client.placeDetails(request)
+        return {
+          ...movieTheatre,
+          movieTheatreWebsite: pdResponse.data.result.website
+        }
+      })
+    )
+    res.status(200).send(moviesWithUrls);
   } catch (e) {
     res.status(400).send(e);
   }
